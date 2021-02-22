@@ -20,7 +20,10 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -a -o controll
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
 # oamdev/gcr.io-distroless-static:nonroot is syncd from gcr.io/distroless/static:nonroot as somewhere can't reach gcr.io
-FROM oamdev/gcr.io-distroless-static:nonroot
+FROM ghcr.io/oracle/oraclelinux:7-slim
+USER root
+RUN groupadd -g 65532 nonroot && \
+    useradd -g 65532 -u 65532 -d /home/nonroot -m nonroot
 WORKDIR /
 COPY --from=builder /workspace/controller .
 USER nonroot:nonroot
