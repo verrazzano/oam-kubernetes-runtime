@@ -23,7 +23,10 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -a -o controll
 FROM ghcr.io/oracle/oraclelinux:7-slim
 USER root
 RUN groupadd -g 65532 nonroot && \
-    useradd -g 65532 -u 65532 -d /home/nonroot -m nonroot
+    useradd -g 65532 -u 65532 -d /home/nonroot -m nonroot && \
+    yum update -y openssl-libs python glibc libcurl glibc-common curl python-libs && \
+    yum clean all && \
+    rm -rf /var/cache/yum
 WORKDIR /
 COPY --from=builder /workspace/controller .
 USER nonroot:nonroot
